@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class FormInput extends StatelessWidget {
-  final MyController;
+  TextEditingController? myController = TextEditingController();
   dynamic? labelAwal;
   dynamic? labelAkhir;
   dynamic? typeInput;
   var logicValidation;
 
-  FormInput({this.labelAwal, this.labelAkhir, this.MyController, this.logicValidation, this.typeInput});
+  FormInput({this.labelAwal, this.labelAkhir, this.myController, this.logicValidation, this.typeInput});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class FormInput extends StatelessWidget {
         ),
         width: 297,
         child: TextFormField(
-          controller: MyController,
+          controller: myController,
           validator: logicValidation,
           obscureText: typeInput,
           style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),

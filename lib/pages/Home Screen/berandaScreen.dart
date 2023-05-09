@@ -1,9 +1,11 @@
+import 'package:culture_trip/models/user.dart';
 import 'package:culture_trip/widgets/berandaContainer.dart';
 import 'package:culture_trip/widgets/cardBoard.dart';
 import 'package:culture_trip/widgets/contentContainer3.dart';
 import 'package:culture_trip/widgets/fiturButton.dart';
 import 'package:culture_trip/widgets/customNavButton.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BerandaScreen extends StatefulWidget {
   @override
@@ -11,12 +13,30 @@ class BerandaScreen extends StatefulWidget {
 }
 
 class _BerandaScreenState extends State<BerandaScreen> {
+  final Akun = new Users();
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  var nameUser = 'user';
+
+  changeText() async {
+    SharedPreferences session = await SharedPreferences.getInstance();
+    String? key = session.getString('user');
+    Map<String, dynamic>? data = await Akun.readUserId(key);
+    setState(() {
+      nameUser = data['nama'];
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    changeText();
   }
 
   @override
@@ -58,7 +78,7 @@ class _BerandaScreenState extends State<BerandaScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Selamat Datang User',
+                                    'Selamat Datang ${nameUser}',
                                     style: TextStyle(
                                       color: Color.fromARGB(255, 255, 255, 255),
                                       fontFamily: 'Montserrat',

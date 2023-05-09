@@ -1,11 +1,16 @@
+import 'dart:io';
 import 'dart:ui';
 
+import 'package:culture_trip/models/db.dart';
+import 'package:culture_trip/models/user.dart';
 import 'package:culture_trip/widgets/berandaContainer.dart';
 import 'package:culture_trip/widgets/fiturButton.dart';
 import 'package:culture_trip/widgets/customNavButton.dart';
 import 'package:culture_trip/widgets/mapProfile.dart';
 import 'package:culture_trip/widgets/textProfile.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -13,12 +18,63 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final Akun = new Users();
+  final ImagePicker picker = ImagePicker();
+
+// varibel data photos
+  dynamic? pp = AssetImage('lib/assets/images/wisata1.png');
+
+  XFile? image;
+  XFile? photo;
+// varibel data profile
+
+  String nama = 'kosong';
+  String email = 'kosong';
+  String alamat = 'kosong';
+  String bio = 'kosong';
+  String ttl = 'kosong';
+
+// counter icon color
   int _selectedIndex = 3;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+// function get profil from db
+
+  getProfil() async {
+    SharedPreferences session = await SharedPreferences.getInstance();
+    String? key = session.getString('user');
+    Map<String, dynamic>? data = await Akun.readUserId(key);
+
+    setState(() {
+      nama = data['nama'];
+      email = data['email'];
+      alamat = data['alamat'];
+      bio = data['bio'];
+      ttl = data['ttl'];
+      if (data['foto'] == 'belum diisi' || File(data['foto']!) == null) {
+        pp = AssetImage('lib/assets/images/wisata1.png');
+      } else {
+        pp = FileImage(File(data['foto']!));
+      }
+    });
+  }
+
+  updateFotoProfil(path) async {
+    SharedPreferences session = await SharedPreferences.getInstance();
+    String? key = session.getString('user');
+    await FirebaseHelper.ref.child('users/${key}').update({
+      "foto": path,
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getProfil();
   }
 
   @override
@@ -62,12 +118,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                          image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage(
-                          'lib/assets/images/beranda.png',
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: AssetImage('lib/assets/images/beranda.png'),
                         ),
-                      )),
+                      ),
                       width: MediaQuery.of(context).size.width,
                       height: 400,
                       child: Padding(
@@ -85,9 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: AssetImage(
-                                    'lib/assets/images/wisata1.png',
-                                  ),
+                                  image: pp,
                                 ),
                                 border: Border.all(
                                   color: Theme.of(context).primaryColor,
@@ -106,7 +159,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   shape: BoxShape.circle,
                                 ),
                                 child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10.0),
+                                            ),
+                                            actions: [
+                                              Container(
+                                                width: MediaQuery.of(context).size.width,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  children: [
+                                                    IconButton(
+                                                      icon: Icon(Icons.close),
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Center(
+                                                child: TextButton(
+                                                  onPressed: () async {
+                                                    final ImagePicker picker = ImagePicker();
+                                                    image = await picker.pickImage(source: ImageSource.camera);
+                                                    updateFotoProfil(image!.path);
+
+                                                    setState(() {
+                                                      pp = FileImage(File(image!.path));
+                                                    });
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text(
+                                                    'Camera',
+                                                    style: TextStyle(
+                                                      fontSize: 17,
+                                                      color: Theme.of(context).primaryColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Center(
+                                                child: TextButton(
+                                                  onPressed: () async {
+                                                    final ImagePicker picker = ImagePicker();
+                                                    image = await picker.pickImage(source: ImageSource.gallery);
+                                                    updateFotoProfil(image!.path);
+                                                    setState(() {
+                                                      pp = FileImage(File(image!.path));
+                                                    });
+
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text(
+                                                    'Gallery',
+                                                    style: TextStyle(
+                                                      fontSize: 17,
+                                                      color: Theme.of(context).primaryColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          );
+                                        });
+                                  },
                                   icon: Icon(
                                     Icons.camera_alt,
                                     size: 25,
@@ -178,23 +299,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                 TextProfile(
                                   textContent: 'Nama',
-                                  subTextContent: 'Muhammad Aliffandy\nanjay',
+                                  subTextContent: nama,
                                 ),
                                 TextProfile(
-                                  textContent: 'Nama',
-                                  subTextContent: 'Muhammad Aliffandy\nanjay',
-                                ),
-                                TextProfile(
-                                  textContent: 'Nama',
-                                  subTextContent: 'Muhammad Aliffandy\nanjay',
-                                ),
-                                TextProfile(
-                                  textContent: 'Nama',
-                                  subTextContent: 'Muhammad Aliffandy\nanjay',
+                                  textContent: 'Email',
+                                  subTextContent: email,
                                 ),
                                 MapProfile(
-                                  textContent: 'Nama',
-                                  subTextContent: 'Muhammad Aliffandy',
+                                  textContent: 'Alamat',
+                                  subTextContent: alamat,
+                                ),
+                                TextProfile(
+                                  textContent: 'Bio',
+                                  subTextContent: bio,
+                                ),
+                                TextProfile(
+                                  textContent: 'TTL',
+                                  subTextContent: ttl,
                                 ),
                               ],
                             ),

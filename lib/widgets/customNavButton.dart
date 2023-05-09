@@ -50,7 +50,7 @@ class _CustomNavButtonState extends State<CustomNavButton> {
             bottom: 35,
             left: 0,
             right: 0,
-            child: CircleButton(),
+            child: Center(child: CircleButton()),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,

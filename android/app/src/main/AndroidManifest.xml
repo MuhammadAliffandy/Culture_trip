@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.culture_trip">
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
    <application
         android:label="culture_trip"
         android:name="${applicationName}"
@@ -34,4 +36,5 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBlSAIPySTMKNOS4YWNwDr2jQGpk0It2l0"/>
     </application>
+    
 </manifest>

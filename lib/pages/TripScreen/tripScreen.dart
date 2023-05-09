@@ -1,6 +1,8 @@
+import 'dart:convert';
+
+import 'package:culture_trip/models/weather.dart';
 import 'package:culture_trip/widgets/berandaContainer.dart';
 import 'package:culture_trip/widgets/cardBoard.dart';
-
 import 'package:culture_trip/widgets/customNavButton.dart';
 import 'package:culture_trip/widgets/slider.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +13,42 @@ class TripScreen extends StatefulWidget {
 }
 
 class _TripScreenState extends State<TripScreen> {
+  dynamic lokasi = 'load';
+  dynamic suhu = 'load';
+  dynamic status = 'load';
+  dynamic icon = '//picsum.photos/250?image=9';
+  final API = new WeatherAPI();
+
+  loadAPI() {
+    API.fetchData().then((response) {
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          lokasi = '${data['location']['name']}\n${data['location']['country']}';
+          suhu = data['current']['temp_c'];
+          status = data['current']['condition']['text'];
+          icon = data['current']['condition']['icon'];
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    }).catchError((error) {
+      print(error);
+    });
+  }
+
   int _selectedIndex = 5;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadAPI();
   }
 
   @override
@@ -60,7 +92,7 @@ class _TripScreenState extends State<TripScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(
-                                'Jakarta,\nIndonesia',
+                                lokasi,
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
                                   color: Colors.white,
@@ -68,36 +100,35 @@ class _TripScreenState extends State<TripScreen> {
                                 ),
                               ),
                               Text(
-                                '20`C',
+                                '${suhu}`C',
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
-                                  fontSize: 24,
+                                  fontSize: 20,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Cerah',
-                                    style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 24,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                                  Container(
+                                    width: 80,
+                                    child: Text(
+                                      status,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Container(
+                                  Image(
+                                    image: NetworkImage('https:${icon}'),
                                     width: 40,
                                     height: 40,
-                                    decoration: BoxDecoration(
-                                      color: Colors.amber,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
+                                  )
                                 ],
                               )
                             ],

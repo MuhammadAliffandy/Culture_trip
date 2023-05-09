@@ -3,8 +3,20 @@ import 'package:culture_trip/widgets/formInput.dart';
 import 'package:culture_trip/widgets/navAkun.dart';
 import 'package:culture_trip/widgets/signButton.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController email = TextEditingController();
+
+  TextEditingController password = TextEditingController();
+
+  final formKey = new GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -45,50 +57,87 @@ class LoginScreen extends StatelessWidget {
                 height: 30,
               ),
               Container(
-                child: Column(
-                  children: [
-                    FormInput(
-                      labelAwal: 'Email',
-                      labelAkhir: 'Masukan Email',
-                      typeInput: false,
-                    ),
-                    FormInput(
-                      labelAwal: 'Password',
-                      labelAkhir: 'Masukan Password',
-                      typeInput: true,
-                    ),
-                    Container(
-                      width: 297,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              'Lupa password?',
-                              style: TextStyle(fontFamily: 'Poppins', fontSize: 12, color: Colors.black),
-                            ),
-                          ),
-                        ],
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      FormInput(
+                        myController: email,
+                        labelAwal: 'Email',
+                        labelAkhir: 'Masukan Email',
+                        typeInput: false,
+                        logicValidation: (value) {
+                          if (value.isEmpty) {
+                            return 'Email harus diisi';
+                          } else if (!value.contains("@")) {
+                            return 'Email tidak valid';
+                          }
+                        },
                       ),
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    signButton(
-                      textButton: 'Sign In',
-                      functionButton: () {
-                        Navigator.pushNamed(context, '/beranda');
-                      },
-                    ),
-                    NavAkun(
-                      textContent: 'Belum punya akun ?',
-                      textButton: 'Sign Up',
-                      functionButton: () {
-                        Navigator.pushNamedAndRemoveUntil(context, '/regis', ModalRoute.withName('/regis'));
-                      },
-                    )
-                  ],
+                      FormInput(
+                        myController: password,
+                        labelAwal: 'Password',
+                        labelAkhir: 'Masukan Password',
+                        typeInput: true,
+                        logicValidation: (value) {
+                          if (value.isEmpty) {
+                            return 'Password harus diisi';
+                          }
+                        },
+                      ),
+                      Container(
+                        width: 297,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                'Lupa password?',
+                                style: TextStyle(fontFamily: 'Poppins', fontSize: 12, color: Colors.black),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      signButton(
+                        textButton: 'Sign In',
+                        functionButton: () {
+                          final Akun = Users();
+
+                          if (formKey.currentState!.validate()) {
+                            Akun.checkUsers(email.text, password.text).then(
+                              (value) async {
+                                if (value['status'] == true) {
+                                  SharedPreferences session = await SharedPreferences.getInstance();
+                                  session.setString('user', value['key']);
+                                  Navigator.pushNamedAndRemoveUntil(context, '/beranda', ModalRoute.withName('/beranda'));
+                                } else if (value['status'] == false) {
+                                  final snackBar = SnackBar(
+                                    content: Text(
+                                      'Email atau password salah',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                }
+                              },
+                            );
+                          }
+                        },
+                      ),
+                      NavAkun(
+                        textContent: 'Belum punya akun ?',
+                        textButton: 'Sign Up',
+                        functionButton: () {
+                          Navigator.pushNamedAndRemoveUntil(context, '/regis', ModalRoute.withName('/regis'));
+                        },
+                      )
+                    ],
+                  ),
                 ),
               )
             ],
