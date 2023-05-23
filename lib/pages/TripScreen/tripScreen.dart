@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:culture_trip/models/budaya.dart';
+import 'package:culture_trip/models/paketWisata.dart';
 import 'package:culture_trip/models/weather.dart';
 import 'package:culture_trip/widgets/berandaContainer.dart';
 import 'package:culture_trip/widgets/cardBoard.dart';
@@ -16,7 +18,11 @@ class _TripScreenState extends State<TripScreen> {
   dynamic lokasi = 'load';
   dynamic suhu = 'load';
   dynamic status = 'load';
-  dynamic icon = '//picsum.photos/250?image=9';
+  dynamic icon = '//w7.pngwing.com/pngs/164/641/png-transparent-logo-business-please-wait-angle-text-hand.png';
+  final Paket = new PaketWisata();
+  List<dynamic>? allPaket;
+  final AllBudaya = new Budaya();
+  List<dynamic>? allBudaya;
   final API = new WeatherAPI();
 
   loadAPI() {
@@ -37,6 +43,22 @@ class _TripScreenState extends State<TripScreen> {
     });
   }
 
+  loadPaket() {
+    Paket.readPaket().then((data) {
+      setState(() {
+        allPaket = data;
+      });
+    });
+  }
+
+  loadBudaya() {
+    AllBudaya.readBudaya().then((data) {
+      setState(() {
+        allBudaya = data;
+      });
+    });
+  }
+
   int _selectedIndex = 5;
 
   void _onItemTapped(int index) {
@@ -48,7 +70,8 @@ class _TripScreenState extends State<TripScreen> {
   @override
   void initState() {
     super.initState();
-    loadAPI();
+    loadPaket();
+    loadBudaya();
   }
 
   @override
@@ -88,51 +111,62 @@ class _TripScreenState extends State<TripScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           height: 60,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text(
-                                lokasi,
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '${suhu}`C',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 80,
-                                    child: Text(
-                                      status,
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 14,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  Image(
-                                    image: NetworkImage('https:${icon}'),
-                                    width: 40,
-                                    height: 40,
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
+                          child: FutureBuilder<List<dynamic>>(
+                              future: loadAPI(),
+                              builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else {
+                                  if (snapshot.hasError) {
+                                    return Text('Failed to load data from API');
+                                  } else {
+                                    return Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(
+                                          lokasi,
+                                          style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          '${suhu}`C',
+                                          style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 50,
+                                              child: Text(
+                                                status,
+                                                maxLines: 2,
+                                                style: TextStyle(
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 12,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            Image(
+                                              image: NetworkImage('https:${icon}'),
+                                              width: 40,
+                                              height: 40,
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    );
+                                  }
+                                }
+                              }),
                         ),
                       ),
                     ),
@@ -156,24 +190,20 @@ class _TripScreenState extends State<TripScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Row(
-                          children: [
-                            BerandaContainer(
-                              textContent: 'Culture Trip\nYogyakarta',
-                              photoContent: 'lib/assets/images/wisata1.png',
-                            ),
-                            BerandaContainer(
-                              textContent: 'Culture Trip\nYogyakarta',
-                              photoContent: 'lib/assets/images/wisata1.png',
-                            ),
-                            BerandaContainer(
-                              textContent: 'Culture Trip\nYogyakarta',
-                              photoContent: 'lib/assets/images/wisata1.png',
-                            ),
-                            BerandaContainer(
-                              textContent: 'Culture Trip\nYogyakarta',
-                              photoContent: 'lib/assets/images/wisata1.png',
-                            ),
-                          ],
+                          children: allPaket != null
+                              ? allPaket!.map((paket) {
+                                  return BerandaContainer(
+                                    textContent: 'Culture Trip \n${paket['judul']}',
+                                    photoContent: paket['gambar'],
+                                  );
+                                }).toList()
+                              : [
+                                  Center(
+                                    child: CircularProgressIndicator(
+                                      backgroundColor: Theme.of(context).primaryColor,
+                                    ), // Tampilkan animasi loading
+                                  )
+                                ],
                         ),
                       ),
                     )
@@ -197,24 +227,31 @@ class _TripScreenState extends State<TripScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Row(
-                          children: [
-                            BerandaContainer(
-                              textContent: 'Culture Trip\nYogyakarta',
-                              photoContent: 'lib/assets/images/wisata1.png',
-                            ),
-                            BerandaContainer(
-                              textContent: 'Culture Trip\nYogyakarta',
-                              photoContent: 'lib/assets/images/wisata1.png',
-                            ),
-                            BerandaContainer(
-                              textContent: 'Culture Trip\nYogyakarta',
-                              photoContent: 'lib/assets/images/wisata1.png',
-                            ),
-                            BerandaContainer(
-                              textContent: 'Culture Trip\nYogyakarta',
-                              photoContent: 'lib/assets/images/wisata1.png',
-                            ),
-                          ],
+                          children: allBudaya != null
+                              ? allBudaya!.map((data) {
+                                  final Map<String, dynamic> arguments = {
+                                    'toRoute': '/budaya',
+                                    'title': 'Budaya',
+                                    'judul': data['judul'],
+                                    'artikel': data['artikel'],
+                                    'gambar': data['gambar']
+                                  };
+
+                                  return BerandaContainer(
+                                    textContent: data['judul'],
+                                    photoContent: data['gambar'],
+                                    functionButton: () {
+                                      Navigator.pushNamed(context, '/readItem', arguments: arguments);
+                                    },
+                                  );
+                                }).toList()
+                              : [
+                                  Center(
+                                    child: CircularProgressIndicator(
+                                      backgroundColor: Theme.of(context).primaryColor,
+                                    ), // Tampilkan animasi loading
+                                  )
+                                ],
                         ),
                       ),
                     )

@@ -1,3 +1,4 @@
+import 'package:culture_trip/models/informasi.dart';
 import 'package:culture_trip/widgets/contentContainer3.dart';
 import 'package:culture_trip/widgets/customNavButton.dart';
 import 'package:culture_trip/widgets/customSearch.dart';
@@ -9,12 +10,29 @@ class InformasiScreen extends StatefulWidget {
 }
 
 class _InformasiScreenState extends State<InformasiScreen> {
+  final AllInformasi = new Informasi();
+  List<dynamic>? allInformasi;
+
   int _selectedIndex = 5;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  loadInformasi() {
+    AllInformasi.readInformasi().then((data) {
+      setState(() {
+        allInformasi = data;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadInformasi();
   }
 
   @override
@@ -63,30 +81,43 @@ class _InformasiScreenState extends State<InformasiScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
-                        'Info Wisata',
+                        'Informasi',
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Column(
-                        children: [
-                          ContentContainer3(
-                            textContent: '15 Hal terbaik di jogja',
-                            subTextContent: 'Budaya kedaerahan yang melekat dan indah lekuknya bangunan dengan ciri khas asdsad sddsa jawanyadasdasddd',
-                            photoContent: 'lib/assets/images/wisata1.png',
-                          ),
-                          ContentContainer3(
-                            textContent: '15 Hal terbaik di jogja',
-                            subTextContent: 'Budaya kedaerahan yang melekat dan indah lekuknya bangunan dengan ciri khas asdsad sddsa jawanyadasdasddd',
-                            photoContent: 'lib/assets/images/wisata1.png',
-                          ),
-                          ContentContainer3(
-                            textContent: '15 Hal terbaik di jogja',
-                            subTextContent: 'Budaya kedaerahan yang melekat dan indah lekuknya bangunan dengan ciri khas asdsad sddsa jawanyadasdasddd',
-                            photoContent: 'lib/assets/images/wisata1.png',
-                          ),
-                        ],
+                        children: allInformasi != null
+                            ? allInformasi!.map((data) {
+                                final Map<String, dynamic> arguments = {
+                                  'toRoute': '/informasi',
+                                  'title': 'Informasi',
+                                  'judul': data['judul'],
+                                  'artikel': data['artikel'],
+                                  'gambar': data['gambar']
+                                };
+
+                                return ContentContainer3(
+                                  textContent: data['judul'],
+                                  subTextContent: data['artikel'],
+                                  photoContent: data['gambar'],
+                                  functionButton: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      '/readInfo',
+                                      arguments: arguments,
+                                    );
+                                  },
+                                );
+                              }).toList()
+                            : [
+                                Center(
+                                  child: CircularProgressIndicator(
+                                    backgroundColor: Theme.of(context).primaryColor,
+                                  ), // Tampilkan animasi loading
+                                )
+                              ],
                       ),
                     ),
                     SizedBox(

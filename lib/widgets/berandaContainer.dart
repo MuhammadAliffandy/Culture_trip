@@ -17,7 +17,7 @@ class BerandaContainer extends StatelessWidget {
         decoration: BoxDecoration(
           image: DecorationImage(
               fit: BoxFit.cover,
-              image: AssetImage(
+              image: NetworkImage(
                 photoContent,
               )),
           color: Colors.red,
@@ -34,6 +34,10 @@ class BerandaContainer extends StatelessWidget {
         child: Container(
           width: 216,
           height: 132,
+          decoration: BoxDecoration(
+            color: Color.fromARGB(144, 40, 40, 40),
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

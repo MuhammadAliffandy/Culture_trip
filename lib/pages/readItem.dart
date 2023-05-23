@@ -19,16 +19,22 @@ class _ReadItemScreenState extends State<ReadItemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic>? arguments = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    //
+
+    //
+    final Map<String, dynamic>? arguments = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     var _toRoute = arguments?['toRoute'];
     var _title = arguments?['title'];
+    var _judul = arguments?['judul'];
+    var _artikel = arguments?['artikel'];
+    var _gambar = arguments?['gambar'];
 
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(context, _toRoute, ModalRoute.withName(_toRoute));
+              Navigator.pop(context, '/readItem');
             },
             icon: Icon(
               Icons.arrow_back,
@@ -61,16 +67,20 @@ class _ReadItemScreenState extends State<ReadItemScreen> {
                     ),
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage('lib/assets/images/wisata1.png'),
+                      image: NetworkImage(_gambar),
                     )),
                 child: Center(
-                  child: Text(
-                    'Dayak',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      _judul,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                      ),
                     ),
                   ),
                 ),
@@ -80,7 +90,7 @@ class _ReadItemScreenState extends State<ReadItemScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(25),
                   child: Text(
-                    'Lorem Ipsum is simply dummy text of the printing and typesetting\n industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing LoremLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen boolly unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem',
+                    _artikel,
                     overflow: TextOverflow.clip,
                     maxLines: null,
                     style: TextStyle(

@@ -15,11 +15,12 @@ class RegisScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          color: Theme.of(context).backgroundColor,
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        color: Theme.of(context).backgroundColor,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -103,73 +104,77 @@ class RegisScreen extends StatelessWidget {
                           }
                         },
                       ),
-                      SizedBox(
-                        height: 40,
-                      ),
-                      signButton(
-                        textButton: 'Sign Up',
-                        functionButton: () {
-                          if (formKey.currentState!.validate()) {
-                            final Akun = new Users(
-                              nama: nama.text,
-                              email: email.text,
-                              alamat: alamat.text,
-                              password: password.text,
-                            );
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 40),
+                        child: Column(
+                          children: [
+                            signButton(
+                              textButton: 'Sign Up',
+                              functionButton: () {
+                                if (formKey.currentState!.validate()) {
+                                  final Akun = new Users(
+                                    nama: nama.text,
+                                    email: email.text,
+                                    alamat: alamat.text,
+                                    password: password.text,
+                                  );
 
-                            Akun.addUser().then((value) => {
-                                  if (value == true)
-                                    {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(10.0),
-                                              ),
-                                              title: Text(
-                                                'Selamat',
-                                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              content: Text(
-                                                'Akun anda Sudah Terdaftar',
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              actions: [
-                                                Center(
-                                                  child: ElevatedButton(
-                                                    style: ButtonStyle(
-                                                      backgroundColor: MaterialStateProperty.all(Colors.green),
-                                                      minimumSize: MaterialStateProperty.all(Size(150, 50)),
-                                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(20),
-                                                      )),
+                                  Akun.addUser().then((value) => {
+                                        if (value == true)
+                                          {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(10.0),
                                                     ),
-                                                    onPressed: () {
-                                                      Navigator.pushNamedAndRemoveUntil(context, '/login', ModalRoute.withName('/login'));
-                                                    },
-                                                    child: Text(
-                                                      'Okay',
-                                                      style: TextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),
+                                                    title: Text(
+                                                      'Selamat',
+                                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                                                      textAlign: TextAlign.center,
                                                     ),
-                                                  ),
-                                                ),
-                                              ],
-                                            );
-                                          })
-                                    }
-                                });
-                          }
-                        },
+                                                    content: Text(
+                                                      'Akun anda Sudah Terdaftar',
+                                                      textAlign: TextAlign.center,
+                                                    ),
+                                                    actions: [
+                                                      Center(
+                                                        child: ElevatedButton(
+                                                          style: ButtonStyle(
+                                                            backgroundColor: MaterialStateProperty.all(Colors.green),
+                                                            minimumSize: MaterialStateProperty.all(Size(150, 50)),
+                                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius.circular(20),
+                                                            )),
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.pushNamedAndRemoveUntil(context, '/login', ModalRoute.withName('/login'));
+                                                          },
+                                                          child: Text(
+                                                            'Okay',
+                                                            style: TextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                })
+                                          }
+                                      });
+                                }
+                              },
+                            ),
+                            NavAkun(
+                              textContent: 'Sudah punya akun ?',
+                              textButton: 'Sign In',
+                              functionButton: () {
+                                Navigator.pushNamedAndRemoveUntil(context, '/login', ModalRoute.withName('/login'));
+                              },
+                            )
+                          ],
+                        ),
                       ),
-                      NavAkun(
-                        textContent: 'Sudah punya akun ?',
-                        textButton: 'Sign In',
-                        functionButton: () {
-                          Navigator.pushNamedAndRemoveUntil(context, '/login', ModalRoute.withName('/login'));
-                        },
-                      )
                     ],
                   ),
                 ),

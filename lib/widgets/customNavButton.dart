@@ -6,8 +6,8 @@ class CircleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-      width: 88,
-      height: 88,
+      width: 78,
+      height: 78,
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
         shape: BoxShape.circle,
@@ -46,22 +46,24 @@ class _CustomNavButtonState extends State<CustomNavButton> {
       padding: const EdgeInsets.all(9.0),
       child: Container(
         child: Stack(children: [
-          Positioned(
-            bottom: 35,
-            left: 0,
-            right: 0,
-            child: Center(child: CircleButton()),
-          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(72, 255, 70, 70),
+                      spreadRadius: -5,
+                      blurRadius: 7,
+                      offset: Offset(0, 5),
+                    )
+                  ],
                 ),
                 height: 70,
                 child: CustomPaint(
-                  size: Size(530, (530 * 0.2850467289719626).toDouble()),
+                  size: Size(MediaQuery.of(context).size.width, (MediaQuery.of(context).size.width * 0.2850467289719626).toDouble()),
                   painter: RPSCustomPainter(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -91,6 +93,7 @@ class _CustomNavButtonState extends State<CustomNavButton> {
                             GestureDetector(
                               onTap: () {
                                 widget.onItemTapped(1);
+                                Navigator.pushNamed(context, '/favorit');
                               },
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -162,6 +165,12 @@ class _CustomNavButtonState extends State<CustomNavButton> {
                 ),
               ),
             ],
+          ),
+          Positioned(
+            bottom: 35,
+            left: 0,
+            right: 0,
+            child: Center(child: CircleButton()),
           ),
         ]),
       ),

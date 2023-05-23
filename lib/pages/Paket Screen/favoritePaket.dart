@@ -1,19 +1,20 @@
-import 'package:culture_trip/models/wisata.dart';
-import 'package:culture_trip/widgets/contentContainer2.dart';
+import 'package:culture_trip/models/paketWisata.dart';
+import 'package:culture_trip/widgets/berandaContainer.dart';
+import 'package:culture_trip/widgets/contentContainer.dart';
 import 'package:culture_trip/widgets/customNavButton.dart';
 import 'package:culture_trip/widgets/customSearch.dart';
 import 'package:flutter/material.dart';
 
-class WisataScreen extends StatefulWidget {
+class FavoriteScreen extends StatefulWidget {
   @override
-  State<WisataScreen> createState() => _WisataScreenState();
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
 }
 
-class _WisataScreenState extends State<WisataScreen> {
-  // variabel
-  final AllWisata = new Wisata();
-  List<dynamic>? allWisata;
-  int _selectedIndex = 5;
+class _FavoriteScreenState extends State<FavoriteScreen> {
+  final Paket = new PaketWisata();
+  List<dynamic>? allPaket;
+
+  int _selectedIndex = 1;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -21,10 +22,10 @@ class _WisataScreenState extends State<WisataScreen> {
     });
   }
 
-  loadWisata() {
-    AllWisata.readWisata().then((data) {
+  loadPaket() {
+    Paket.filterFavorite().then((data) {
       setState(() {
-        allWisata = data;
+        allPaket = data;
       });
     });
   }
@@ -32,7 +33,7 @@ class _WisataScreenState extends State<WisataScreen> {
   @override
   void initState() {
     super.initState();
-    loadWisata();
+    loadPaket();
   }
 
   @override
@@ -52,7 +53,7 @@ class _WisataScreenState extends State<WisataScreen> {
         backgroundColor: Theme.of(context).backgroundColor,
         elevation: 0,
         title: Text(
-          'Wisata',
+          'Favorit',
           style: TextStyle(
             fontSize: 22,
             color: Theme.of(context).primaryColor,
@@ -81,32 +82,21 @@ class _WisataScreenState extends State<WisataScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
-                        'Info Wisata',
+                        'Paket',
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Column(
-                        children: allWisata != null
-                            ? allWisata!.map((data) {
-                                final Map<String, dynamic> arguments = {
-                                  'toRoute': '/wisata',
-                                  'title': 'Wisata',
-                                  'judul': data['judul'],
-                                  'artikel': data['artikel'],
-                                  'gambar': data['gambar']
-                                };
-                                return ContentContainer2(
-                                  textContent: data['judul'],
-                                  photoContent: data['gambar'],
-                                  functionButton: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      '/readItem',
-                                      arguments: arguments,
-                                    );
-                                  },
+                        children: allPaket != null
+                            ? allPaket!.map((paket) {
+                                return ContentContainer(
+                                  textContent: paket['judul'],
+                                  subTextContent: paket['deskripsi'],
+                                  photoContent: paket['gambar'],
+                                  idPaket: paket['judul'],
+                                  isFavorited: paket['favorite'],
                                 );
                               }).toList()
                             : [

@@ -1,3 +1,4 @@
+import 'package:culture_trip/models/paketWisata.dart';
 import 'package:culture_trip/widgets/berandaContainer.dart';
 import 'package:culture_trip/widgets/contentContainer.dart';
 import 'package:culture_trip/widgets/customNavButton.dart';
@@ -10,12 +11,29 @@ class PaketScreen extends StatefulWidget {
 }
 
 class _PaketScreenState extends State<PaketScreen> {
+  final Paket = new PaketWisata();
+  List<dynamic>? allPaket;
+
   int _selectedIndex = 5;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  loadPaket() {
+    Paket.readPaket().then((data) {
+      setState(() {
+        allPaket = data;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadPaket();
   }
 
   @override
@@ -71,16 +89,23 @@ class _PaketScreenState extends State<PaketScreen> {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Column(
-                        children: [
-                          ContentContainer(
-                            textContent: 'Kota Yogyakarta',
-                            subTextContent: 'Budaya kedaerahan yang melekat dan indah lekuknya bangunan dengan ciri khas jawanya',
-                            photoContent: 'lib/assets/images/wisata1.png',
-                            functionButton: () {
-                              Navigator.pushNamedAndRemoveUntil(context, '/readPaket', ModalRoute.withName('/paket'));
-                            },
-                          ),
-                        ],
+                        children: allPaket != null
+                            ? allPaket!.map((paket) {
+                                return ContentContainer(
+                                  textContent: paket['judul'],
+                                  subTextContent: paket['deskripsi'],
+                                  photoContent: paket['gambar'],
+                                  idPaket: paket['judul'],
+                                  isFavorited: paket['favorite'],
+                                );
+                              }).toList()
+                            : [
+                                Center(
+                                  child: CircularProgressIndicator(
+                                    backgroundColor: Theme.of(context).primaryColor,
+                                  ), // Tampilkan animasi loading
+                                )
+                              ],
                       ),
                     ),
                     SizedBox(

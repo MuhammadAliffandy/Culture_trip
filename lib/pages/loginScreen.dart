@@ -4,6 +4,10 @@ import 'package:culture_trip/widgets/navAkun.dart';
 import 'package:culture_trip/widgets/signButton.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sn_progress_dialog/sn_progress_dialog.dart';
+
+final GoogleSignIn googleSignIn = GoogleSignIn();
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -12,9 +16,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController email = TextEditingController();
-
   TextEditingController password = TextEditingController();
-
   final formKey = new GlobalKey<FormState>();
 
   @override
@@ -107,15 +109,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         textButton: 'Sign In',
                         functionButton: () {
                           final Akun = Users();
+                          ProgressDialog pd = ProgressDialog(context: context);
+                          pd.show(
+                            msg: 'Sedang Login...',
+                            progressBgColor: Theme.of(context).primaryColor,
+                          );
 
                           if (formKey.currentState!.validate()) {
                             Akun.checkUsers(email.text, password.text).then(
                               (value) async {
                                 if (value['status'] == true) {
+                                  pd.close();
                                   SharedPreferences session = await SharedPreferences.getInstance();
                                   session.setString('user', value['key']);
                                   Navigator.pushNamedAndRemoveUntil(context, '/beranda', ModalRoute.withName('/beranda'));
                                 } else if (value['status'] == false) {
+                                  pd.close();
                                   final snackBar = SnackBar(
                                     content: Text(
                                       'Email atau password salah',

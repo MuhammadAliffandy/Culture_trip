@@ -17,7 +17,7 @@ class ContentContainer2 extends StatelessWidget {
         decoration: BoxDecoration(
           image: DecorationImage(
               fit: BoxFit.cover,
-              image: AssetImage(
+              image: NetworkImage(
                 photoContent,
               )),
           color: Colors.red,
@@ -34,6 +34,10 @@ class ContentContainer2 extends StatelessWidget {
         child: Container(
           width: 365,
           height: 150,
+          decoration: BoxDecoration(
+            color: Color.fromARGB(144, 40, 40, 40),
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -45,7 +49,7 @@ class ContentContainer2 extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.white,
                     fontFamily: 'Poppins',
-                    fontSize: 16,
+                    fontSize: 18,
                     shadows: [
                       Shadow(
                         color: Color.fromARGB(255, 89, 89, 89),

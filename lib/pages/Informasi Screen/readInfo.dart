@@ -19,12 +19,19 @@ class _ReadInformasiScreenState extends State<ReadInformasiScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic>? arguments = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    var _toRoute = arguments?['toRoute'];
+    var _title = arguments?['title'];
+    var _judul = arguments?['judul'];
+    var _artikel = arguments?['artikel'];
+    var _gambar = arguments?['gambar'];
+
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
-              Navigator.pop(context, '/informasi');
+              Navigator.pop(context, '/readInfo');
             },
             icon: Icon(
               Icons.arrow_back,
@@ -68,13 +75,13 @@ class _ReadInformasiScreenState extends State<ReadInformasiScreen> {
                   padding: const EdgeInsets.all(30),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       child: Column(
                         children: [
                           Text(
-                            '15 hal lucu di jogaj',
+                            _judul,
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -84,11 +91,14 @@ class _ReadInformasiScreenState extends State<ReadInformasiScreen> {
                             height: 30,
                           ),
                           Text(
-                            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standammy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standammy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standammy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standammy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing LoremLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen boolly unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem',
+                            _artikel,
                             style: TextStyle(
                               fontSize: 15,
                               fontFamily: 'Poppins',
                             ),
+                          ),
+                          SizedBox(
+                            height: 120,
                           ),
                         ],
                       ),

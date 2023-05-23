@@ -1,3 +1,4 @@
+import 'package:culture_trip/models/informasi.dart';
 import 'package:culture_trip/models/user.dart';
 import 'package:culture_trip/widgets/berandaContainer.dart';
 import 'package:culture_trip/widgets/cardBoard.dart';
@@ -14,6 +15,10 @@ class BerandaScreen extends StatefulWidget {
 
 class _BerandaScreenState extends State<BerandaScreen> {
   final Akun = new Users();
+  final AllInformasi = new Informasi();
+  List<dynamic>? allInformasi;
+  var nameUser = '';
+
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -22,7 +27,13 @@ class _BerandaScreenState extends State<BerandaScreen> {
     });
   }
 
-  var nameUser = 'user';
+  loadInformasi() {
+    AllInformasi.readInformasi().then((data) {
+      setState(() {
+        allInformasi = data;
+      });
+    });
+  }
 
   changeText() async {
     SharedPreferences session = await SharedPreferences.getInstance();
@@ -37,6 +48,7 @@ class _BerandaScreenState extends State<BerandaScreen> {
   void initState() {
     super.initState();
     changeText();
+    loadInformasi();
   }
 
   @override
@@ -139,7 +151,7 @@ class _BerandaScreenState extends State<BerandaScreen> {
                                 },
                               ),
                               FiturButton(
-                                icon: Icons.cruelty_free_rounded,
+                                icon: Icons.local_fire_department_rounded,
                                 textFitur: 'Budaya',
                                 warnaIcon: Colors.orange,
                                 functionButton: () {
@@ -175,7 +187,7 @@ class _BerandaScreenState extends State<BerandaScreen> {
                       ),
                     ),
                     CardBoard(
-                      textContent: 'Robert',
+                      textContent: nameUser,
                       textTier: 'Pemula',
                       numberTrip: '0',
                     )
@@ -199,18 +211,32 @@ class _BerandaScreenState extends State<BerandaScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Row(
-                          children: [
-                            ContentContainer3(
-                              textContent: '15 Hal terbaik di jogja',
-                              subTextContent: 'Budaya kedaerahan yang melekat dan indah lekuknya bangunan dengan ciri khas asdsad sddsa jawanyadasdasddd',
-                              photoContent: 'lib/assets/images/wisata1.png',
-                            ),
-                            ContentContainer3(
-                              textContent: '15 Hal terbaik di jogja',
-                              subTextContent: 'Budaya kedaerahan yang melekat dan indah lekuknya bangunan dengan ciri khas asdsad sddsa jawanyadasdasddd',
-                              photoContent: 'lib/assets/images/wisata1.png',
-                            ),
-                          ],
+                          children: allInformasi != null
+                              ? allInformasi!.map((data) {
+                                  final Map<String, dynamic> arguments = {
+                                    'toRoute': '/informasi',
+                                    'title': 'Informasi',
+                                    'judul': data['judul'],
+                                    'artikel': data['artikel'],
+                                    'gambar': data['gambar']
+                                  };
+
+                                  return ContentContainer3(
+                                    textContent: data['judul'],
+                                    subTextContent: data['artikel'],
+                                    photoContent: data['gambar'],
+                                    functionButton: () {
+                                      Navigator.pushNamedAndRemoveUntil(context, '/readInfo', arguments: arguments, ModalRoute.withName(arguments['toRoute']));
+                                    },
+                                  );
+                                }).toList()
+                              : [
+                                  Center(
+                                    child: CircularProgressIndicator(
+                                      backgroundColor: Theme.of(context).primaryColor,
+                                    ), // Tampilkan animasi loading
+                                  )
+                                ],
                         ),
                       ),
                     )

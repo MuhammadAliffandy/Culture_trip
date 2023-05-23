@@ -41,7 +41,7 @@ class _ReadPaketScreenState extends State<ReadPaketScreen> {
         appBar: AppBar(
           leading: IconButton(
               onPressed: () {
-                Navigator.pop(context, '/wisata');
+                Navigator.pop(context, '/readPaket');
               },
               icon: Icon(
                 Icons.arrow_back,

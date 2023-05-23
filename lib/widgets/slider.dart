@@ -17,8 +17,8 @@ class _SliderImageState extends State<SliderImage> {
             bottomRight: Radius.circular(20),
           ),
           image: DecorationImage(
-            image: AssetImage(
-              'lib/assets/images/wisata1.png',
+            image: NetworkImage(
+              'https://assets.ayobandung.com/crop/0x0:0x0/750x500/webp/photo/2022/03/05/3493419764.jpeg',
             ),
             fit: BoxFit.cover,
           )),
@@ -30,8 +30,8 @@ class _SliderImageState extends State<SliderImage> {
             bottomRight: Radius.circular(20),
           ),
           image: DecorationImage(
-            image: AssetImage(
-              'lib/assets/images/beranda.png',
+            image: NetworkImage(
+              'https://www.adira.co.id/img/frontend/news/thumb_10rekomendasiwisatadiindonesiayangterkenalmenduniajpg.jpg',
             ),
             fit: BoxFit.cover,
           )),
@@ -43,8 +43,8 @@ class _SliderImageState extends State<SliderImage> {
             bottomRight: Radius.circular(20),
           ),
           image: DecorationImage(
-            image: AssetImage(
-              'lib/assets/images/wisata1.png',
+            image: NetworkImage(
+              'https://akcdn.detik.net.id/community/media/visual/2020/10/21/candi-prambanan_169.jpeg?w=620',
             ),
             fit: BoxFit.cover,
           )),

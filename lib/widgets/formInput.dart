@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class FormInput extends StatelessWidget {
   TextEditingController? myController = TextEditingController();
-  dynamic? labelAwal;
-  dynamic? labelAkhir;
-  dynamic? typeInput;
+  String? labelAwal;
+  String? labelAkhir;
+  bool? typeInput;
   var logicValidation;
 
   FormInput({this.labelAwal, this.labelAkhir, this.myController, this.logicValidation, this.typeInput});
@@ -29,7 +29,7 @@ class FormInput extends StatelessWidget {
         child: TextFormField(
           controller: myController,
           validator: logicValidation,
-          obscureText: typeInput,
+          obscureText: typeInput!,
           style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
           decoration: InputDecoration(
             filled: true,

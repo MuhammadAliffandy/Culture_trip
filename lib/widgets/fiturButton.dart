@@ -13,7 +13,7 @@ class FiturButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 7),
       child: Container(
-        width: 90,
+        width: 80,
         height: 77,
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 255, 255, 255),
@@ -43,7 +43,7 @@ class FiturButton extends StatelessWidget {
                 color: Colors.black,
                 fontFamily: 'Poppins',
                 fontWeight: FontWeight.w500,
-                fontSize: 12,
+                fontSize: 11,
               ),
             ),
           ],

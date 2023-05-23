@@ -1,9 +1,11 @@
+import 'package:culture_trip/models/paketWisata.dart';
 import 'package:culture_trip/models/user.dart';
 import 'package:culture_trip/pages/Home%20Screen/berandaScreen.dart';
 import 'package:culture_trip/pages/Budaya%20Screen/budayaScreen.dart';
 import 'package:culture_trip/pages/Home%20Screen/homeScreen.dart';
 import 'package:culture_trip/pages/Informasi%20Screen/informasiScreen.dart';
 import 'package:culture_trip/pages/Informasi%20Screen/readInfo.dart';
+import 'package:culture_trip/pages/Paket%20Screen/favoritePaket.dart';
 import 'package:culture_trip/pages/Paket%20Screen/readPaket.dart';
 import 'package:culture_trip/pages/TripScreen/tripScreen.dart';
 import 'package:culture_trip/pages/loginScreen.dart';
@@ -15,6 +17,7 @@ import 'package:culture_trip/pages/Home%20Screen/splashScreen.dart';
 import 'package:culture_trip/pages/Wisata%20Screen/wisataScreen.dart';
 import 'package:culture_trip/pages/showMapProfil.dart';
 import 'package:culture_trip/widgets/customNavButton.dart';
+import 'package:culture_trip/widgets/loadUpdate.dart';
 import 'package:culture_trip/widgets/splash.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +31,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseAuth.instance.signInWithEmailAndPassword(email: "aliffandyrealgo@gmail.com", password: "Fandy123#");
 
   runApp(CultureTrip());
 }
@@ -68,10 +70,12 @@ class CultureTrip extends StatelessWidget {
         '/informasi': (context) => InformasiScreen(),
         '/profil': (context) => ProfileScreen(),
         '/trip': (context) => TripScreen(),
+        '/favorit': (context) => FavoriteScreen(),
         '/readItem': (context) => ReadItemScreen(),
         '/readInfo': (context) => ReadInformasiScreen(),
         '/readPaket': (context) => ReadPaketScreen(),
         '/showMapProfil': (context) => MapScreen(),
+        '/loadUp': (context) => LoadingUpdate(),
       },
       home: MySplashScreen(),
     );

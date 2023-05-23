@@ -16,13 +16,13 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
-                height: 150,
-              ),
-              Container(
-                width: 300,
-                height: 300,
-                child: Image.asset('lib/assets/images/tripvector.png'),
+              Padding(
+                padding: EdgeInsets.only(top: 100),
+                child: Container(
+                  width: 300,
+                  height: 300,
+                  child: Image.asset('lib/assets/images/tripvector.png'),
+                ),
               ),
               SizedBox(
                 height: 10,
@@ -48,22 +48,27 @@ class HomeScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
-                    SizedBox(
-                      height: 80,
-                    ),
-                    signButton(
-                      textButton: 'Sign In',
-                      functionButton: () {
-                        Navigator.pushNamed(context, '/login');
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    signupButton(
-                      functionButton: () {
-                        Navigator.pushNamed(context, '/regis');
-                      },
+                    Padding(
+                      padding: const EdgeInsets.only(top: 60),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          signButton(
+                            textButton: 'Sign In',
+                            functionButton: () {
+                              Navigator.pushNamed(context, '/login');
+                            },
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          signupButton(
+                            functionButton: () {
+                              Navigator.pushNamed(context, '/regis');
+                            },
+                          )
+                        ],
+                      ),
                     )
                   ],
                 ),

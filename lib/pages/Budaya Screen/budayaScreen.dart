@@ -1,3 +1,4 @@
+import 'package:culture_trip/models/budaya.dart';
 import 'package:culture_trip/widgets/contentContainer2.dart';
 import 'package:culture_trip/widgets/customNavButton.dart';
 import 'package:culture_trip/widgets/customSearch.dart';
@@ -9,17 +10,29 @@ class BudayaScreen extends StatefulWidget {
 }
 
 class _BudayaScreenState extends State<BudayaScreen> {
-  int _selectedIndex = 5;
+  final AllBudaya = new Budaya();
+  List<dynamic>? allBudaya;
 
-  final Map<String, dynamic> arguments = {
-    'toRoute': '/budaya',
-    'title': 'Budaya'
-  };
+  int _selectedIndex = 5;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  loadBudaya() {
+    AllBudaya.readBudaya().then((data) {
+      setState(() {
+        allBudaya = data;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadBudaya();
   }
 
   @override
@@ -75,15 +88,35 @@ class _BudayaScreenState extends State<BudayaScreen> {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Column(
-                        children: [
-                          ContentContainer2(
-                            textContent: 'Kota Yogyakarta',
-                            photoContent: 'lib/assets/images/wisata1.png',
-                            functionButton: () {
-                              Navigator.pushNamedAndRemoveUntil(context, '/readItem', arguments: arguments, ModalRoute.withName(arguments['toRoute']));
-                            },
-                          ),
-                        ],
+                        children: allBudaya != null
+                            ? allBudaya!.map((data) {
+                                final Map<String, dynamic> arguments = {
+                                  'toRoute': '/budaya',
+                                  'title': 'Budaya',
+                                  'judul': data['judul'],
+                                  'artikel': data['artikel'],
+                                  'gambar': data['gambar']
+                                };
+
+                                return ContentContainer2(
+                                  textContent: data['judul'],
+                                  photoContent: data['gambar'],
+                                  functionButton: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      '/readItem',
+                                      arguments: arguments,
+                                    );
+                                  },
+                                );
+                              }).toList()
+                            : [
+                                Center(
+                                  child: CircularProgressIndicator(
+                                    backgroundColor: Theme.of(context).primaryColor,
+                                  ), // Tampilkan animasi loading
+                                )
+                              ],
                       ),
                     ),
                     SizedBox(
