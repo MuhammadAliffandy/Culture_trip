@@ -1,6 +1,5 @@
 import 'package:culture_trip/models/informasi.dart';
 import 'package:culture_trip/models/user.dart';
-import 'package:culture_trip/widgets/berandaContainer.dart';
 import 'package:culture_trip/widgets/cardBoard.dart';
 import 'package:culture_trip/widgets/contentContainer3.dart';
 import 'package:culture_trip/widgets/fiturButton.dart';
@@ -226,7 +225,7 @@ class _BerandaScreenState extends State<BerandaScreen> {
                                     subTextContent: data['artikel'],
                                     photoContent: data['gambar'],
                                     functionButton: () {
-                                      Navigator.pushNamedAndRemoveUntil(context, '/readInfo', arguments: arguments, ModalRoute.withName(arguments['toRoute']));
+                                      Navigator.pushNamed(context, '/readInfo', arguments: arguments);
                                     },
                                   );
                                 }).toList()

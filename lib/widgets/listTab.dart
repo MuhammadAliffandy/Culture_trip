@@ -1,7 +1,12 @@
 import 'package:culture_trip/widgets/textWisata.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class ListTab extends StatelessWidget {
+  dynamic judul;
+  dynamic gambar;
+  Widget? miniMap;
+  dynamic functionMapButton;
   List<Widget> listDestinasi;
   List<Widget> listBajuAdat;
   List<Widget> listPenginapan;
@@ -9,6 +14,10 @@ class ListTab extends StatelessWidget {
     required this.listDestinasi,
     required this.listBajuAdat,
     required this.listPenginapan,
+    this.judul,
+    this.gambar,
+    this.miniMap,
+    this.functionMapButton,
   });
 
   @override
@@ -32,7 +41,7 @@ class ListTab extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: AssetImage('lib/assets/images/wisata1.png'),
+                            image: NetworkImage(gambar),
                           )),
                     ),
                     Positioned(
@@ -55,7 +64,7 @@ class ListTab extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Culture Trip Yogyakarta',
+                                      'Culture Trip ${judul}',
                                       style: Theme.of(context).textTheme.headlineMedium,
                                     ),
                                     TextWisata(textContent: 'Destinasi', listChild: listDestinasi),
@@ -73,6 +82,7 @@ class ListTab extends StatelessWidget {
                                             height: 95,
                                             child: Stack(
                                               children: [
+                                                miniMap == null ? Center(child: Text('Map Tidak Terdeteksi')) : miniMap!,
                                                 Positioned(
                                                     right: 0,
                                                     bottom: 0,
@@ -82,7 +92,7 @@ class ListTab extends StatelessWidget {
                                                         width: 35,
                                                         height: 35,
                                                         child: IconButton(
-                                                          onPressed: () {},
+                                                          onPressed: functionMapButton,
                                                           icon: Icon(
                                                             Icons.zoom_in,
                                                             color: Colors.white,

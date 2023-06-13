@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class NavAkun extends StatelessWidget {
-  dynamic? textContent;
-  dynamic? textButton;
+  dynamic textContent;
+  dynamic textButton;
   var functionButton;
 
   NavAkun({this.textButton, this.textContent, this.functionButton});

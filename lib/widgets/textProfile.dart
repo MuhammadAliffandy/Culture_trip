@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class TextProfile extends StatelessWidget {
-  dynamic? textContent;
-  dynamic? subTextContent;
+  dynamic textContent;
+  dynamic subTextContent;
 
   TextProfile({this.textContent, this.subTextContent});
 

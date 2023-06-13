@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class ContentContainer2 extends StatelessWidget {
-  dynamic? textContent;
-  dynamic? photoContent;
-  dynamic? functionButton;
+  dynamic textContent;
+  dynamic photoContent;
+  dynamic functionButton;
 
   ContentContainer2({this.textContent, this.photoContent, this.functionButton});
 

@@ -43,6 +43,7 @@ dependencies:
   firebase_auth: ^4.5.0
   firebase_storage: ^11.2.0
   # package to custom
+  intl: ^0.18.1
   carousel_slider: ^4.2.1
   shared_preferences: ^2.1.0
   image_picker: ^0.8.7+4
@@ -51,10 +52,11 @@ dependencies:
   google_sign_in: ^6.1.0
   #package map
   geolocator: ^9.0.2
-  flutter_map: ^4.0.0
   latlong2: ^0.8.1
-
-
+  google_maps_flutter: ^2.2.8
+  geocoding: ^2.1.0
+  flutter_polyline_points: ^1.0.0
+  google_maps_routes: ^1.1.2
   
 
 dev_dependencies:

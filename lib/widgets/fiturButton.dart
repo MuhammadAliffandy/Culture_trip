@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class FiturButton extends StatelessWidget {
-  dynamic? icon;
-  dynamic? warnaIcon;
-  dynamic? textFitur;
-  dynamic? functionButton;
+  dynamic icon;
+  dynamic warnaIcon;
+  dynamic textFitur;
+  dynamic functionButton;
 
   FiturButton({this.icon, this.warnaIcon, this.textFitur, this.functionButton});
 

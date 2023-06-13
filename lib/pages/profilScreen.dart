@@ -2,16 +2,14 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:culture_trip/models/db.dart';
 import 'package:culture_trip/models/user.dart';
-import 'package:culture_trip/widgets/berandaContainer.dart';
-import 'package:culture_trip/widgets/fiturButton.dart';
 import 'package:culture_trip/widgets/customNavButton.dart';
+import 'package:culture_trip/widgets/inputEdit.dart';
 import 'package:culture_trip/widgets/mapProfile.dart';
+import 'package:culture_trip/widgets/signButton.dart';
 import 'package:culture_trip/widgets/textProfile.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
@@ -24,12 +22,12 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final Akun = new Users();
   final ImagePicker picker = ImagePicker();
-
+  TextEditingController cNama = TextEditingController();
+  TextEditingController cBio = TextEditingController();
+  TextEditingController cTanggal = TextEditingController();
 // varibel data photos
   dynamic pp = AssetImage('lib/assets/images/defaultpp.jpg');
   File? foto;
-
-// variabel data profile
 
 // counter icon color
   int _selectedIndex = 3;
@@ -339,7 +337,98 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 style: Theme.of(context).textTheme.headlineMedium,
                                               ),
                                               TextButton(
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return Material(
+                                                          color: Color.fromARGB(40, 77, 77, 77),
+                                                          child: Container(
+                                                            width: MediaQuery.of(context).size.width,
+                                                            child: Center(
+                                                              child: Container(
+                                                                decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.circular(20),
+                                                                  color: Colors.white,
+                                                                ),
+                                                                width: 330,
+                                                                height: 430,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Container(
+                                                                      width: MediaQuery.of(context).size.width,
+                                                                      child: Padding(
+                                                                        padding: const EdgeInsets.all(10.0),
+                                                                        child: Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.end,
+                                                                          children: [
+                                                                            TextButton(
+                                                                              onPressed: () {
+                                                                                cNama.clear();
+                                                                                cBio.clear();
+                                                                                cTanggal.clear();
+                                                                                Navigator.pop(context);
+                                                                              },
+                                                                              child: Text(
+                                                                                'batal',
+                                                                                style: TextStyle(
+                                                                                  color: Theme.of(context).primaryColor,
+                                                                                  fontSize: 16,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      height: 350,
+                                                                      child: Column(
+                                                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                        children: [
+                                                                          Column(
+                                                                            children: [
+                                                                              EditInput(
+                                                                                myController: cNama,
+                                                                                labelAwal: 'Nama',
+                                                                                labelAkhir: nama,
+                                                                              ),
+                                                                              EditInput(
+                                                                                myController: cBio,
+                                                                                labelAwal: 'Bio',
+                                                                                labelAkhir: bio,
+                                                                              ),
+                                                                              EditInput(
+                                                                                myController: cTanggal,
+                                                                                labelAwal: 'TTL',
+                                                                                labelAkhir: ttl,
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          signButton(
+                                                                            textButton: 'Perbarui',
+                                                                            functionButton: () async {
+                                                                              final Akun = new Users();
+                                                                              SharedPreferences session = await SharedPreferences.getInstance();
+                                                                              String? key = session.getString('user');
+                                                                              Akun.upUser(key, cNama.text, cBio.text, cTanggal.text);
+                                                                              Navigator.pushReplacementNamed(context, '/profil');
+                                                                              cNama.clear();
+                                                                              cBio.clear();
+                                                                              cTanggal.clear();
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      });
+                                                },
                                                 child: Row(
                                                   children: [
                                                     Text(

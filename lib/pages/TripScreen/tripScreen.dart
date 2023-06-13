@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:culture_trip/models/budaya.dart';
 import 'package:culture_trip/models/paketWisata.dart';
+import 'package:culture_trip/models/user.dart';
 import 'package:culture_trip/models/weather.dart';
 import 'package:culture_trip/widgets/berandaContainer.dart';
-import 'package:culture_trip/widgets/cardBoard.dart';
 import 'package:culture_trip/widgets/customNavButton.dart';
 import 'package:culture_trip/widgets/slider.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TripScreen extends StatefulWidget {
   @override
@@ -19,18 +20,23 @@ class _TripScreenState extends State<TripScreen> {
   dynamic suhu = 'load';
   dynamic status = 'load';
   dynamic icon = '//w7.pngwing.com/pngs/164/641/png-transparent-logo-business-please-wait-angle-text-hand.png';
+  final Akun = Users();
   final Paket = new PaketWisata();
   List<dynamic>? allPaket;
   final AllBudaya = new Budaya();
   List<dynamic>? allBudaya;
   final API = new WeatherAPI();
 
-  loadAPI() {
-    API.fetchData().then((response) {
+  loadAPI() async {
+    SharedPreferences session = await SharedPreferences.getInstance();
+    String? key = session.getString('user');
+    Map<String, dynamic>? data = await Akun.readUserId(key);
+
+    API.fetchData(data['lokasi']['latitude'], data['lokasi']['longitude']).then((response) {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
-          lokasi = '${data['location']['name']}\n${data['location']['country']}';
+          lokasi = '${data['location']['name']}\n${data['location']['region']}';
           suhu = data['current']['temp_c'];
           status = data['current']['condition']['text'];
           icon = data['current']['condition']['icon'];
@@ -111,10 +117,10 @@ class _TripScreenState extends State<TripScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           height: 60,
-                          child: FutureBuilder<List<dynamic>>(
+                          child: FutureBuilder<dynamic>(
                               future: loadAPI(),
-                              builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
+                              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                                if (snapshot.connectionState == ConnectionState.none) {
                                   return CircularProgressIndicator();
                                 } else {
                                   if (snapshot.hasError) {
@@ -192,9 +198,21 @@ class _TripScreenState extends State<TripScreen> {
                         child: Row(
                           children: allPaket != null
                               ? allPaket!.map((paket) {
+                                  final Map<String, dynamic> arguments = {
+                                    'judul': paket['judul'],
+                                    'idPaket': paket['idPaket'],
+                                    'gambar': paket['gambar']
+                                  };
                                   return BerandaContainer(
                                     textContent: 'Culture Trip \n${paket['judul']}',
                                     photoContent: paket['gambar'],
+                                    functionButton: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        '/readPaket',
+                                        arguments: arguments,
+                                      );
+                                    },
                                   );
                                 }).toList()
                               : [

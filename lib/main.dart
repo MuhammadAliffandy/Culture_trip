@@ -1,5 +1,3 @@
-import 'package:culture_trip/models/paketWisata.dart';
-import 'package:culture_trip/models/user.dart';
 import 'package:culture_trip/pages/Home%20Screen/berandaScreen.dart';
 import 'package:culture_trip/pages/Budaya%20Screen/budayaScreen.dart';
 import 'package:culture_trip/pages/Home%20Screen/homeScreen.dart';
@@ -7,23 +5,21 @@ import 'package:culture_trip/pages/Informasi%20Screen/informasiScreen.dart';
 import 'package:culture_trip/pages/Informasi%20Screen/readInfo.dart';
 import 'package:culture_trip/pages/Paket%20Screen/favoritePaket.dart';
 import 'package:culture_trip/pages/Paket%20Screen/readPaket.dart';
+import 'package:culture_trip/pages/PesananScreen/pesananScreen.dart';
+import 'package:culture_trip/pages/PesananScreen/readPesanan.dart';
 import 'package:culture_trip/pages/TripScreen/tripScreen.dart';
 import 'package:culture_trip/pages/loginScreen.dart';
 import 'package:culture_trip/pages/Paket%20Screen/paketScreen.dart';
 import 'package:culture_trip/pages/profilScreen.dart';
 import 'package:culture_trip/pages/readItem.dart';
 import 'package:culture_trip/pages/regisScreen.dart';
-import 'package:culture_trip/pages/Home%20Screen/splashScreen.dart';
 import 'package:culture_trip/pages/Wisata%20Screen/wisataScreen.dart';
-import 'package:culture_trip/pages/showMapProfil.dart';
-import 'package:culture_trip/widgets/customNavButton.dart';
+import 'package:culture_trip/pages/showMap.dart';
+import 'package:culture_trip/pages/ShowMapProfil.dart';
 import 'package:culture_trip/widgets/loadUpdate.dart';
 import 'package:culture_trip/widgets/splash.dart';
 import 'package:flutter/material.dart';
-
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -71,10 +67,13 @@ class CultureTrip extends StatelessWidget {
         '/profil': (context) => ProfileScreen(),
         '/trip': (context) => TripScreen(),
         '/favorit': (context) => FavoriteScreen(),
+        '/pesanan': (context) => PesananScreen(),
         '/readItem': (context) => ReadItemScreen(),
         '/readInfo': (context) => ReadInformasiScreen(),
         '/readPaket': (context) => ReadPaketScreen(),
-        '/showMapProfil': (context) => MapScreen(),
+        '/readPesanan': (context) => ReadPesananScreen(),
+        '/showMapProfil': (context) => MapSample(),
+        '/showMap': (context) => ShowMapScreen(),
         '/loadUp': (context) => LoadingUpdate(),
       },
       home: MySplashScreen(),

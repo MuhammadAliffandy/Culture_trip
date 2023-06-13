@@ -1,15 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 import 'package:culture_trip/models/db.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class Users {
-  int? id;
   String? nama;
   String? email;
   String? bio;
@@ -18,7 +14,6 @@ class Users {
   String? password;
 
   Users({
-    this.id,
     this.nama,
     this.alamat,
     this.bio,
@@ -28,10 +23,46 @@ class Users {
   });
 
 // favorite paket
-  upFavorite(id, data) async {
-    await FirebaseHelper.ref.child('Paket/${id}').update({
-      "favorite": data,
+  upFavorite(user, paket, isFavorited) async {
+    await FirebaseHelper.ref.child('favorit/$user').once().then((value) {
+      if (value.snapshot.exists) {
+        FirebaseHelper.ref.child('favorit/$user').child('$paket').once().then((value) {
+          if (value.snapshot.exists) {
+            FirebaseHelper.ref.child('favorit/$user/$paket').update({
+              "isFavorited": isFavorited,
+            });
+          } else {
+            FirebaseHelper.ref.child('favorit/$user').child('$paket').set({
+              "isFavorited": isFavorited,
+              "paket": '$paket',
+            });
+          }
+        });
+      } else {
+        FirebaseHelper.ref.child('favorit').child('$user').child('$paket').set({
+          "isFavorited": isFavorited,
+          "paket": '$paket',
+        });
+      }
     });
+  }
+
+  Future<bool> getFavorit(user, paket) async {
+    var value = await FirebaseHelper.ref.child('favorit/$user').child('$paket').once();
+    if (value.snapshot.exists) {
+      var event = await FirebaseHelper.ref.child('favorit/$user/$paket').once();
+      Map<String, dynamic> data = await jsonDecode(jsonEncode(event.snapshot.value));
+      return data['isFavorited'];
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> showFavorit(user, paket) async {
+    var event = await FirebaseHelper.ref.child('favorit/$user/$paket').once();
+    Map<String, dynamic> data = await jsonDecode(jsonEncode(event.snapshot.value));
+
+    return data['isFavorited'];
   }
 
   // ganti foto
@@ -41,7 +72,7 @@ class Users {
     final fileUpload = FbStorage.storage.child('${namaFolder}/${namaFolder}-${now}').putFile(file);
     final snapshot = await fileUpload.whenComplete(() {});
     final String downloadUrl = await snapshot.ref.getDownloadURL();
-    if (downloadUrl != null) {
+    if (downloadUrl != false) {
       SharedPreferences session = await SharedPreferences.getInstance();
       String? key = session.getString('user');
       await FirebaseHelper.ref.child('users/${key}').update({
@@ -54,10 +85,11 @@ class Users {
 
   // update lokasi
 
-  upLokasi(latitude, longitude) async {
+  upLokasi(latitude, longitude, newAlamat) async {
     SharedPreferences session = await SharedPreferences.getInstance();
     String? key = session.getString('user');
     await FirebaseHelper.ref.child('users/${key}').update({
+      "alamat": newAlamat,
       "lokasi": {
         "latitude": latitude,
         "longitude": longitude
@@ -65,36 +97,7 @@ class Users {
     });
   }
 
-// function increment id
-  Future<String> numCount() async {
-    final completer = Completer<String>();
-
-    FirebaseHelper.ref.child('users/counter').onValue.listen((event) {
-      final counter = event.snapshot.value.toString();
-      if (!completer.isCompleted) {
-        completer.complete(counter);
-      }
-    });
-
-    return completer.future;
-  }
-
-// update nilai increment
-  upCount(newNumCount) async {
-    await FirebaseHelper.ref.child('users').update({
-      "counter": newNumCount,
-    });
-  }
-
 // crud akun
-
-// read akun semuanya
-  Future readUser() async {
-    // untuk melihat data users
-    await FirebaseHelper.ref.child('users').onValue.listen((event) {
-      dynamic values = event.snapshot.value;
-    });
-  }
 
 // cek user dengan key
   Future<bool> readUserWithKey(key) async {
@@ -111,25 +114,12 @@ class Users {
   }
 
 // update data user
-  upUser() async {
-    numCount().then(
-      (value) async {
-        int count = int.parse(value) + 1;
-        await FirebaseHelper.ref.child('users').set({
-          '${count}': {
-            "id": count,
-            "nama": nama,
-            "alamat": alamat,
-            "email": email,
-            "password": password,
-            "bio": 'belum diisi',
-            "ttl": 'belum diisi',
-          }
-        });
-
-        await upCount(count);
-      },
-    );
+  upUser(key, nama, bio, ttl) async {
+    await FirebaseHelper.ref.child('users/${key}').update({
+      "nama": nama,
+      "bio": bio,
+      "ttl": ttl,
+    });
   }
 
   // menambah data user
@@ -140,10 +130,14 @@ class Users {
       return false;
     }
 
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email!,
-      password: password!,
-    );
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email!,
+        password: password!,
+      );
+    } catch (e) {
+      return false;
+    }
 
     await FirebaseHelper.ref.child('users').child(nama.toString()).set({
       "nama": nama,
@@ -186,7 +180,7 @@ class Users {
     final completer = Completer<Map<String, dynamic>>();
 
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: pass);
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: pass);
 
       FirebaseHelper.ref.child('users').orderByChild('email').equalTo(email).once().then(
         (userPass) {

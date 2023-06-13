@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CardBoard extends StatelessWidget {
-  dynamic? textContent;
-  dynamic? textTier;
-  dynamic? numberTrip;
+  dynamic textContent;
+  dynamic textTier;
+  dynamic numberTrip;
 
   CardBoard({this.numberTrip, this.textContent, this.textTier});
 

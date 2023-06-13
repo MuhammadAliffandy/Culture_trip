@@ -1,31 +1,31 @@
-import 'package:culture_trip/models/user.dart';
+import 'package:culture_trip/models/paketWisata.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class ContentContainer extends StatefulWidget {
+class ContentContainer4 extends StatefulWidget {
   dynamic textContent;
   dynamic subTextContent;
+  dynamic dateContent;
   dynamic photoContent;
   dynamic functionButton;
-  bool? isFavorited;
-  dynamic idPaket;
-  dynamic user;
-  ContentContainer({
+  dynamic tanggal;
+  dynamic optionButton;
+
+  ContentContainer4({
     this.textContent,
     this.subTextContent,
     this.photoContent,
     this.functionButton,
-    this.idPaket,
-    this.isFavorited,
-    this.user,
+    this.tanggal,
+    this.optionButton,
   });
 
   @override
-  State<ContentContainer> createState() => _ContentContainerState();
+  State<ContentContainer4> createState() => _ContentContainer4State();
 }
 
-class _ContentContainerState extends State<ContentContainer> {
-  final userFavorit = new Users();
+class _ContentContainer4State extends State<ContentContainer4> {
+  final AllPaket = new PaketWisata();
 
   @override
   Widget build(BuildContext context) {
@@ -92,16 +92,32 @@ class _ContentContainerState extends State<ContentContainer> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    setState(() {
-                                      widget.isFavorited == false ? widget.isFavorited = true : widget.isFavorited = false;
-                                      userFavorit.upFavorite(widget.user, widget.idPaket, widget.isFavorited);
-                                    });
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10.0),
+                                            ),
+                                            actions: [
+                                              Center(
+                                                child: TextButton(
+                                                  onPressed: widget.optionButton,
+                                                  child: Text(
+                                                    'batalkan',
+                                                    style: TextStyle(fontSize: 17, color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        });
                                   },
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(
-                                        widget.isFavorited == false ? Icons.favorite_border_outlined : Icons.favorite,
+                                        Icons.more_horiz,
                                         color: Colors.white,
                                         size: 25,
                                       ),
@@ -111,25 +127,49 @@ class _ContentContainerState extends State<ContentContainer> {
                               ],
                             ),
                             SizedBox(
-                              height: 5,
+                              height: 2,
                             ),
                             Container(
                               width: 270,
-                              child: Text(
-                                widget.subTextContent,
-                                maxLines: 3,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Poppins',
-                                  fontSize: 12,
-                                  shadows: [
-                                    Shadow(
-                                      color: Color.fromARGB(255, 89, 89, 89),
-                                      blurRadius: 2,
-                                      offset: Offset(0, 2),
-                                    )
-                                  ],
-                                ),
+                              height: 90,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    widget.subTextContent,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      shadows: [
+                                        Shadow(
+                                          color: Color.fromARGB(255, 89, 89, 89),
+                                          blurRadius: 2,
+                                          offset: Offset(0, 2),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Text(
+                                    widget.tanggal,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins',
+                                      fontSize: 12,
+                                      shadows: [
+                                        Shadow(
+                                          color: Color.fromARGB(255, 89, 89, 89),
+                                          blurRadius: 2,
+                                          offset: Offset(0, 2),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],

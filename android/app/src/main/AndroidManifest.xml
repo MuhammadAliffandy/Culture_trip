@@ -2,6 +2,7 @@
     package="com.example.culture_trip">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="Culture Trip"
         android:name="${applicationName}"
@@ -34,7 +35,7 @@
             android:value="2" />
         <meta-data 
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBlSAIPySTMKNOS4YWNwDr2jQGpk0It2l0"/>
+            android:value="AIzaSyAzramS1_RvIlb1_3hWMSMz6Au79JHFE6M"/>
             
     </application>
     

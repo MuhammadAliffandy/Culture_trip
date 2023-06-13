@@ -1,5 +1,3 @@
-import 'package:culture_trip/main.dart';
-import 'package:culture_trip/pages/loginScreen.dart';
 import 'package:culture_trip/widgets/signButton.dart';
 import 'package:flutter/material.dart';
 

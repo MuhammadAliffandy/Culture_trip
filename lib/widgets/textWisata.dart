@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class TextWisata extends StatelessWidget {
   List<Widget> listChild = [
-    Text('kosong'),
+    Text(
+      'kosong',
+    ),
   ];
 
   String textContent;
@@ -29,7 +32,7 @@ class TextWisata extends StatelessWidget {
         Container(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(children: listChild),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: listChild),
           ),
         )
       ],

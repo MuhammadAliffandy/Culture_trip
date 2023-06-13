@@ -13,6 +13,16 @@ class _BudayaScreenState extends State<BudayaScreen> {
   final AllBudaya = new Budaya();
   List<dynamic>? allBudaya;
 
+  String textInput = '';
+  Future<bool> searchText(currentText) async {
+    int cek = await currentText.toLowerCase().indexOf(textInput.toLowerCase());
+    if (cek < 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   int _selectedIndex = 5;
 
   void _onItemTapped(int index) {
@@ -71,7 +81,13 @@ class _BudayaScreenState extends State<BudayaScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                CustomSearch(),
+                CustomSearch(
+                  functionField: (value) {
+                    setState(() {
+                      textInput = value;
+                    });
+                  },
+                ),
                 SizedBox(
                   height: 50,
                 ),
@@ -80,9 +96,12 @@ class _BudayaScreenState extends State<BudayaScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Budaya',
-                        style: Theme.of(context).textTheme.headlineMedium,
+                      child: Container(
+                        width: 365,
+                        child: Text(
+                          'Budaya',
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
                       ),
                     ),
                     Padding(
@@ -98,17 +117,25 @@ class _BudayaScreenState extends State<BudayaScreen> {
                                   'gambar': data['gambar']
                                 };
 
-                                return ContentContainer2(
-                                  textContent: data['judul'],
-                                  photoContent: data['gambar'],
-                                  functionButton: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      '/readItem',
-                                      arguments: arguments,
-                                    );
-                                  },
-                                );
+                                return FutureBuilder<bool>(
+                                    future: searchText(data['judul']),
+                                    builder: (BuildContext context, AsyncSnapshot textSnapshot) {
+                                      if (textSnapshot.data == true) {
+                                        return ContentContainer2(
+                                          textContent: data['judul'],
+                                          photoContent: data['gambar'],
+                                          functionButton: () {
+                                            Navigator.pushNamed(
+                                              context,
+                                              '/readItem',
+                                              arguments: arguments,
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        return SizedBox.shrink();
+                                      }
+                                    });
                               }).toList()
                             : [
                                 Center(

@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:culture_trip/models/paketWisata.dart';
-import 'package:culture_trip/widgets/berandaContainer.dart';
+import 'package:culture_trip/models/user.dart';
 import 'package:culture_trip/widgets/contentContainer.dart';
 import 'package:culture_trip/widgets/customNavButton.dart';
 import 'package:culture_trip/widgets/customSearch.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PaketScreen extends StatefulWidget {
   @override
@@ -12,13 +15,23 @@ class PaketScreen extends StatefulWidget {
 
 class _PaketScreenState extends State<PaketScreen> {
   final Paket = new PaketWisata();
+  final Akun = new Users();
   List<dynamic>? allPaket;
+  String? User;
+  String textInput = '';
 
   int _selectedIndex = 5;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+    });
+  }
+
+  loadUser() async {
+    SharedPreferences session = await SharedPreferences.getInstance();
+    setState(() {
+      User = session.getString('user');
     });
   }
 
@@ -30,9 +43,19 @@ class _PaketScreenState extends State<PaketScreen> {
     });
   }
 
+  Future<bool> searchText(currentText) async {
+    int cek = await currentText.toLowerCase().indexOf(textInput.toLowerCase());
+    if (cek < 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    loadUser();
     loadPaket();
   }
 
@@ -72,7 +95,13 @@ class _PaketScreenState extends State<PaketScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                CustomSearch(),
+                CustomSearch(
+                  functionField: (value) {
+                    setState(() {
+                      textInput = value;
+                    });
+                  },
+                ),
                 SizedBox(
                   height: 50,
                 ),
@@ -81,9 +110,12 @@ class _PaketScreenState extends State<PaketScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Paket',
-                        style: Theme.of(context).textTheme.headlineMedium,
+                      child: Container(
+                        width: 365,
+                        child: Text(
+                          'Paket',
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
                       ),
                     ),
                     Padding(
@@ -91,13 +123,41 @@ class _PaketScreenState extends State<PaketScreen> {
                       child: Column(
                         children: allPaket != null
                             ? allPaket!.map((paket) {
-                                return ContentContainer(
-                                  textContent: paket['judul'],
-                                  subTextContent: paket['deskripsi'],
-                                  photoContent: paket['gambar'],
-                                  idPaket: paket['judul'],
-                                  isFavorited: paket['favorite'],
-                                );
+                                final Map<String, dynamic> arguments = {
+                                  'judul': paket['judul'],
+                                  'idPaket': paket['idPaket'],
+                                  'gambar': paket['gambar']
+                                };
+
+                                return FutureBuilder<bool>(
+                                    future: Akun.getFavorit(User, paket['judul']),
+                                    builder: (BuildContext context, AsyncSnapshot<bool> favSnapshot) {
+                                      bool cekFavorit = favSnapshot.data ?? false; // Mengambil nilai dari snapshot.data dan mengatur defaultnya ke false jika snapshot.data null
+                                      return FutureBuilder<bool>(
+                                        future: searchText(paket['judul']),
+                                        builder: (BuildContext context, AsyncSnapshot<bool> textSnapshot) {
+                                          if (textSnapshot.data == true) {
+                                            return ContentContainer(
+                                              textContent: paket['judul'],
+                                              subTextContent: paket['deskripsi'],
+                                              photoContent: paket['gambar'],
+                                              idPaket: paket['judul'],
+                                              isFavorited: cekFavorit,
+                                              user: User,
+                                              functionButton: () {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  '/readPaket',
+                                                  arguments: arguments,
+                                                );
+                                              },
+                                            );
+                                          } else {
+                                            return SizedBox.shrink();
+                                          }
+                                        },
+                                      );
+                                    });
                               }).toList()
                             : [
                                 Center(

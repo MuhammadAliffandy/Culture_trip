@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CustomSearch extends StatelessWidget {
   final MyController;
-  dynamic? functionField;
+  dynamic functionField;
 
   CustomSearch({this.MyController, this.functionField});
 

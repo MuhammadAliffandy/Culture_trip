@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:culture_trip/widgets/formInput.dart';
 import 'package:culture_trip/widgets/navAkun.dart';
 import 'package:culture_trip/widgets/signButton.dart';
-import 'package:culture_trip/models/user.dart';
+import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 
+// ignore: must_be_immutable
 class RegisScreen extends StatelessWidget {
   TextEditingController nama = TextEditingController();
   TextEditingController email = TextEditingController();
@@ -110,7 +111,12 @@ class RegisScreen extends StatelessWidget {
                           children: [
                             signButton(
                               textButton: 'Sign Up',
-                              functionButton: () {
+                              functionButton: () async {
+                                ProgressDialog pd = ProgressDialog(context: context);
+                                pd.show(
+                                  msg: 'Tunggu Sebentar...',
+                                  progressBgColor: Theme.of(context).primaryColor,
+                                );
                                 if (formKey.currentState!.validate()) {
                                   final Akun = new Users(
                                     nama: nama.text,
@@ -119,49 +125,62 @@ class RegisScreen extends StatelessWidget {
                                     password: password.text,
                                   );
 
-                                  Akun.addUser().then((value) => {
-                                        if (value == true)
-                                          {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(10.0),
+                                  var value = await Akun.addUser();
+                                  print(value);
+                                  if (value == true) {
+                                    pd.close();
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10.0),
+                                            ),
+                                            title: Text(
+                                              'Selamat',
+                                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            content: Text(
+                                              'Akun Berhasil Terdaftar',
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            actions: [
+                                              Center(
+                                                child: ElevatedButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor: MaterialStateProperty.all(Colors.green),
+                                                    minimumSize: MaterialStateProperty.all(Size(150, 50)),
+                                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(20),
+                                                    )),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.pushNamedAndRemoveUntil(context, '/login', ModalRoute.withName('/login'));
+                                                  },
+                                                  child: Text(
+                                                    'Okay',
+                                                    style: TextStyle(
+                                                      fontSize: 17,
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.bold,
                                                     ),
-                                                    title: Text(
-                                                      'Selamat',
-                                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                                                      textAlign: TextAlign.center,
-                                                    ),
-                                                    content: Text(
-                                                      'Akun anda Sudah Terdaftar',
-                                                      textAlign: TextAlign.center,
-                                                    ),
-                                                    actions: [
-                                                      Center(
-                                                        child: ElevatedButton(
-                                                          style: ButtonStyle(
-                                                            backgroundColor: MaterialStateProperty.all(Colors.green),
-                                                            minimumSize: MaterialStateProperty.all(Size(150, 50)),
-                                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(20),
-                                                            )),
-                                                          ),
-                                                          onPressed: () {
-                                                            Navigator.pushNamedAndRemoveUntil(context, '/login', ModalRoute.withName('/login'));
-                                                          },
-                                                          child: Text(
-                                                            'Okay',
-                                                            style: TextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                })
-                                          }
-                                      });
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  } else {
+                                    pd.close();
+                                    final snackBar = SnackBar(
+                                      content: Text(
+                                        'Email / Akun sudah ada ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                  }
                                 }
                               },
                             ),

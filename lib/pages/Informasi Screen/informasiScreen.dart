@@ -13,6 +13,16 @@ class _InformasiScreenState extends State<InformasiScreen> {
   final AllInformasi = new Informasi();
   List<dynamic>? allInformasi;
 
+  String textInput = '';
+  Future<bool> searchText(currentText) async {
+    int cek = await currentText.toLowerCase().indexOf(textInput.toLowerCase());
+    if (cek < 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   int _selectedIndex = 5;
 
   void _onItemTapped(int index) {
@@ -71,7 +81,13 @@ class _InformasiScreenState extends State<InformasiScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                CustomSearch(),
+                CustomSearch(
+                  functionField: (value) {
+                    setState(() {
+                      textInput = value;
+                    });
+                  },
+                ),
                 SizedBox(
                   height: 50,
                 ),
@@ -80,9 +96,12 @@ class _InformasiScreenState extends State<InformasiScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Informasi',
-                        style: Theme.of(context).textTheme.headlineMedium,
+                      child: Container(
+                        width: 365,
+                        child: Text(
+                          'Informasi',
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
                       ),
                     ),
                     Padding(
@@ -98,18 +117,26 @@ class _InformasiScreenState extends State<InformasiScreen> {
                                   'gambar': data['gambar']
                                 };
 
-                                return ContentContainer3(
-                                  textContent: data['judul'],
-                                  subTextContent: data['artikel'],
-                                  photoContent: data['gambar'],
-                                  functionButton: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      '/readInfo',
-                                      arguments: arguments,
-                                    );
-                                  },
-                                );
+                                return FutureBuilder<bool>(
+                                    future: searchText(data['judul']),
+                                    builder: (BuildContext context, AsyncSnapshot textSnapshot) {
+                                      if (textSnapshot.data == true) {
+                                        return ContentContainer3(
+                                          textContent: data['judul'],
+                                          subTextContent: data['artikel'],
+                                          photoContent: data['gambar'],
+                                          functionButton: () {
+                                            Navigator.pushNamed(
+                                              context,
+                                              '/readInfo',
+                                              arguments: arguments,
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        return SizedBox.shrink();
+                                      }
+                                    });
                               }).toList()
                             : [
                                 Center(

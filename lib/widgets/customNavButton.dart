@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui' as ui;
 
 class CircleButton extends StatelessWidget {
   @override
@@ -76,7 +75,7 @@ class _CustomNavButtonState extends State<CustomNavButton> {
                             GestureDetector(
                               onTap: () {
                                 widget.onItemTapped(0);
-                                Navigator.pushNamed(context, '/beranda');
+                                Navigator.pushNamedAndRemoveUntil(context, '/beranda', ModalRoute.withName('/beranda'));
                               },
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -93,7 +92,7 @@ class _CustomNavButtonState extends State<CustomNavButton> {
                             GestureDetector(
                               onTap: () {
                                 widget.onItemTapped(1);
-                                Navigator.pushNamed(context, '/favorit');
+                                Navigator.pushNamedAndRemoveUntil(context, '/favorit', ModalRoute.withName('/beranda'));
                               },
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -127,6 +126,8 @@ class _CustomNavButtonState extends State<CustomNavButton> {
                             GestureDetector(
                               onTap: () {
                                 widget.onItemTapped(2);
+
+                                Navigator.pushNamedAndRemoveUntil(context, '/pesanan', ModalRoute.withName('/beranda'));
                               },
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -143,7 +144,7 @@ class _CustomNavButtonState extends State<CustomNavButton> {
                             GestureDetector(
                               onTap: () {
                                 widget.onItemTapped(3);
-                                Navigator.pushNamed(context, '/profil');
+                                Navigator.pushNamedAndRemoveUntil(context, '/profil', ModalRoute.withName('/beranda'));
                               },
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,

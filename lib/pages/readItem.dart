@@ -1,6 +1,4 @@
-import 'package:culture_trip/widgets/contentContainer2.dart';
 import 'package:culture_trip/widgets/customNavButton.dart';
-import 'package:culture_trip/widgets/customSearch.dart';
 import 'package:flutter/material.dart';
 
 class ReadItemScreen extends StatefulWidget {
@@ -23,7 +21,6 @@ class _ReadItemScreenState extends State<ReadItemScreen> {
 
     //
     final Map<String, dynamic>? arguments = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    var _toRoute = arguments?['toRoute'];
     var _title = arguments?['title'];
     var _judul = arguments?['judul'];
     var _artikel = arguments?['artikel'];

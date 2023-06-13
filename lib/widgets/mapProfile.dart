@@ -1,14 +1,17 @@
+import 'dart:async';
+
 import 'package:culture_trip/models/user.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
+
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MapProfile extends StatefulWidget {
   MapProfile({this.textContent, this.subTextContent});
 
-  dynamic? textContent;
-  dynamic? subTextContent;
+  dynamic textContent;
+  dynamic subTextContent;
 
   @override
   State<MapProfile> createState() => _MapProfileState();
@@ -29,7 +32,7 @@ class _MapProfileState extends State<MapProfile> {
 
   @override
   Widget build(BuildContext context) {
-    MapController mapController = MapController();
+    final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
     return FutureBuilder<Map<String, dynamic>>(
         future: getUserData(),
         builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
@@ -89,38 +92,28 @@ class _MapProfileState extends State<MapProfile> {
                             borderRadius: BorderRadius.circular(5),
                             color: Colors.blue,
                           ),
-                          child: FlutterMap(
-                            mapController: mapController,
-                            options: MapOptions(
-                              center: currentLocation,
-                              zoom: 13.0,
-                            ),
-                            children: [
-                              TileLayer(
-                                urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                subdomains: [
-                                  'a',
-                                  'b',
-                                  'c'
-                                ],
+                          child: GoogleMap(
+                            zoomControlsEnabled: false,
+                            markers: {
+                              Marker(
+                                markerId: const MarkerId("marker1"),
+                                position: currentLocation != null ? currentLocation! : LatLng(0, 0),
+                                draggable: true,
+                                onDragEnd: (value) {
+                                  // value is the new position
+                                },
+                                // To do: custom marker icon
                               ),
-                              MarkerLayer(
-                                markers: [
-                                  Marker(
-                                    width: 80.0,
-                                    height: 80.0,
-                                    point: currentLocation,
-                                    builder: (ctx) => Container(
-                                      child: Icon(
-                                        Icons.location_on,
-                                        color: Colors.red,
-                                        size: 50.0,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
+                            },
+                            mapType: MapType.hybrid,
+                            initialCameraPosition: CameraPosition(
+                              bearing: 192.8334901395799,
+                              target: currentLocation != null ? currentLocation! : LatLng(0, 0),
+                              zoom: 19.151926040649414,
+                            ),
+                            onMapCreated: (GoogleMapController controller) {
+                              _controller.complete(controller);
+                            },
                           ),
                         ),
                         Positioned(

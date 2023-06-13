@@ -1,6 +1,5 @@
-import 'package:culture_trip/widgets/contentContainer3.dart';
 import 'package:culture_trip/widgets/customNavButton.dart';
-import 'package:culture_trip/widgets/customSearch.dart';
+
 import 'package:flutter/material.dart';
 
 class ReadInformasiScreen extends StatefulWidget {
@@ -20,11 +19,8 @@ class _ReadInformasiScreenState extends State<ReadInformasiScreen> {
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic>? arguments = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    var _toRoute = arguments?['toRoute'];
-    var _title = arguments?['title'];
     var _judul = arguments?['judul'];
     var _artikel = arguments?['artikel'];
-    var _gambar = arguments?['gambar'];
 
     // TODO: implement build
     return Scaffold(
