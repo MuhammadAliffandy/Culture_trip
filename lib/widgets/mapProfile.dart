@@ -130,7 +130,7 @@ class _MapProfileState extends State<MapProfile> {
                               ),
                               child: IconButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/showMapProfil');
+                                  Navigator.pushNamedAndRemoveUntil(context, '/showMapProfil', ModalRoute.withName('/profil'));
                                 },
                                 icon: Icon(
                                   Icons.my_location_sharp,

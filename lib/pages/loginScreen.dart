@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 
+import '../widgets/inputEdit.dart';
+
 final GoogleSignIn googleSignIn = GoogleSignIn();
 
 class LoginScreen extends StatefulWidget {
@@ -15,8 +17,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController cEmail = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  final Akun = new Users();
   final formKey = new GlobalKey<FormState>();
 
   @override
@@ -93,7 +97,123 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Material(
+                                        color: Color.fromARGB(40, 77, 77, 77),
+                                        child: Container(
+                                          width: MediaQuery.of(context).size.width,
+                                          child: Center(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(20),
+                                                color: Colors.white,
+                                              ),
+                                              width: 330,
+                                              height: 250,
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    width: MediaQuery.of(context).size.width,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(10.0),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        children: [
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              cEmail.clear();
+
+                                                              Navigator.pop(context);
+                                                            },
+                                                            child: Text(
+                                                              'batal',
+                                                              style: TextStyle(
+                                                                color: Theme.of(context).primaryColor,
+                                                                fontSize: 16,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    height: 150,
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                      children: [
+                                                        Column(
+                                                          children: [
+                                                            EditInput(
+                                                              myController: cEmail,
+                                                              labelAwal: 'Email',
+                                                              labelAkhir: 'Masukkan Email',
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        signButton(
+                                                          textButton: 'Kirim',
+                                                          functionButton: () async {
+                                                            Akun.updatePassword(cEmail.text);
+                                                            Navigator.pop(context);
+                                                            showDialog(
+                                                                context: context,
+                                                                builder: (context) {
+                                                                  return AlertDialog(
+                                                                    shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(10.0),
+                                                                    ),
+                                                                    title: Text(
+                                                                      'Permintaan Berhasil',
+                                                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                                                                      textAlign: TextAlign.center,
+                                                                    ),
+                                                                    content: Text(
+                                                                      'Tunggu notifikasi di email anda, jika tidak ada cek ulang email anda! ',
+                                                                      textAlign: TextAlign.center,
+                                                                    ),
+                                                                    actions: [
+                                                                      Center(
+                                                                        child: ElevatedButton(
+                                                                          style: ButtonStyle(
+                                                                            backgroundColor: MaterialStateProperty.all(Colors.green),
+                                                                            minimumSize: MaterialStateProperty.all(Size(150, 50)),
+                                                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                                                              borderRadius: BorderRadius.circular(20),
+                                                                            )),
+                                                                          ),
+                                                                          onPressed: () {
+                                                                            Navigator.pop(context);
+                                                                          },
+                                                                          child: Text(
+                                                                            'Okay',
+                                                                            style: TextStyle(
+                                                                              fontSize: 17,
+                                                                              color: Colors.white,
+                                                                              fontWeight: FontWeight.bold,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                });
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              },
                               child: Text(
                                 'Lupa password?',
                                 style: TextStyle(fontFamily: 'Poppins', fontSize: 12, color: Colors.black),

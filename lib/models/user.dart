@@ -143,7 +143,6 @@ class Users {
       "nama": nama,
       "alamat": alamat,
       "email": email,
-      "password": password,
       "bio": 'belum diisi',
       "ttl": 'belum diisi',
       "foto": 'belum diisi',
@@ -180,7 +179,14 @@ class Users {
     final completer = Completer<Map<String, dynamic>>();
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: pass);
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: pass);
+
+      User user = userCredential.user!;
+
+      SharedPreferences sessionToken = await SharedPreferences.getInstance();
+      sessionToken.setString('uid', user.uid);
+
+      // cek user with email and pssword
 
       FirebaseHelper.ref.child('users').orderByChild('email').equalTo(email).once().then(
         (userPass) {
@@ -213,5 +219,25 @@ class Users {
 
     return completer.future;
   }
+
+  Future<bool> cekUserLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? uid = prefs.getString('uid');
+
+    if (uid == null) {
+      return false;
+    } else {
+      if (uid != '') {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  updatePassword(emailV) async {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: emailV);
+  }
+
   //batas =====================================
 }

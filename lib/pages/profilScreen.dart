@@ -109,8 +109,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           color: Theme.of(context).primaryColor,
                                         ),
                                         TextButton(
-                                          onPressed: () {
+                                          onPressed: () async {
                                             Navigator.pushNamedAndRemoveUntil(context, '/login', ModalRoute.withName('/login'));
+                                            SharedPreferences session = await SharedPreferences.getInstance();
+                                            session.setString('user', '');
+                                            session.setString('uid', '');
                                           },
                                           child: Text(
                                             'Sign Out',

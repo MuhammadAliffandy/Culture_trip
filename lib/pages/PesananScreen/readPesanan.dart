@@ -74,7 +74,9 @@ class _ReadPesananScreenState extends State<ReadPesananScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(context, '/bayar', ModalRoute.withName('/pesanan'));
+                  },
                   child: Text(
                     'Bayar',
                     style: TextStyle(fontSize: 16),

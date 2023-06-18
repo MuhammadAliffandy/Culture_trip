@@ -90,6 +90,7 @@ flutter:
     - lib/assets/images/wisata1.png
     - lib/assets/images/Bronze.png
     - lib/assets/images/defaultpp.jpg
+    - lib/assets/images/qr.png
  
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -142,6 +142,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                           ),
                                         );
                                       }
+
+                                      if (favSnapshot.data == null) {
+                                        return Center(
+                                          child: Text('Anda belum menyukai Paket'),
+                                        );
+                                      }
                                       if (favSnapshot.data == false) {
                                         return SizedBox.shrink();
                                       } else {

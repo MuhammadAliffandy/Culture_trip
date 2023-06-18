@@ -186,9 +186,12 @@ class _TripScreenState extends State<TripScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Paket Wisata',
-                        style: Theme.of(context).textTheme.headlineMedium,
+                      child: Container(
+                        width: 365,
+                        child: Text(
+                          'Paket Wisata',
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
                       ),
                     ),
                     SingleChildScrollView(
@@ -216,10 +219,13 @@ class _TripScreenState extends State<TripScreen> {
                                   );
                                 }).toList()
                               : [
-                                  Center(
-                                    child: CircularProgressIndicator(
-                                      backgroundColor: Theme.of(context).primaryColor,
-                                    ), // Tampilkan animasi loading
+                                  Container(
+                                    width: 365,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        backgroundColor: Theme.of(context).primaryColor,
+                                      ), // Tampilkan animasi loading
+                                    ),
                                   )
                                 ],
                         ),
@@ -235,9 +241,12 @@ class _TripScreenState extends State<TripScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Inspirasi Budaya',
-                        style: Theme.of(context).textTheme.headlineMedium,
+                      child: Container(
+                        width: 365,
+                        child: Text(
+                          'Inspirasi Budaya',
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
                       ),
                     ),
                     SingleChildScrollView(
@@ -264,10 +273,13 @@ class _TripScreenState extends State<TripScreen> {
                                   );
                                 }).toList()
                               : [
-                                  Center(
-                                    child: CircularProgressIndicator(
-                                      backgroundColor: Theme.of(context).primaryColor,
-                                    ), // Tampilkan animasi loading
+                                  Container(
+                                    width: 365,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        backgroundColor: Theme.of(context).primaryColor,
+                                      ), // Tampilkan animasi loading
+                                    ),
                                   )
                                 ],
                         ),

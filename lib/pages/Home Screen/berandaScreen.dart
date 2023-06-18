@@ -200,9 +200,12 @@ class _BerandaScreenState extends State<BerandaScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Informasi',
-                        style: Theme.of(context).textTheme.headlineMedium,
+                      child: Container(
+                        width: 365,
+                        child: Text(
+                          'Informasi',
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
                       ),
                     ),
                     SingleChildScrollView(
@@ -230,10 +233,13 @@ class _BerandaScreenState extends State<BerandaScreen> {
                                   );
                                 }).toList()
                               : [
-                                  Center(
-                                    child: CircularProgressIndicator(
-                                      backgroundColor: Theme.of(context).primaryColor,
-                                    ), // Tampilkan animasi loading
+                                  Container(
+                                    width: 365,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        backgroundColor: Theme.of(context).primaryColor,
+                                      ), // Tampilkan animasi loading
+                                    ),
                                   )
                                 ],
                         ),
