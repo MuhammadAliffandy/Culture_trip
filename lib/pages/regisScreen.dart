@@ -25,6 +25,9 @@ class RegisScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(
+                height: 60,
+              ),
               Container(
                 width: 120,
                 height: 120,
@@ -126,7 +129,7 @@ class RegisScreen extends StatelessWidget {
                                   );
 
                                   var value = await Akun.addUser();
-                                  print(value);
+
                                   if (value == true) {
                                     pd.close();
                                     showDialog(
